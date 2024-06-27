@@ -1,0 +1,7 @@
+[Unit]
+Description=Check for new webknossos accounts
+After=network.target network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/webknossos/check_new_user.sh
