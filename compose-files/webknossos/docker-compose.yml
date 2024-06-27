@@ -1,0 +1,87 @@
+version: "2.2"
+
+services:
+  webknossos:
+    image: scalableminds/webknossos:24.04.0
+    ports:
+      - "127.0.0.1:9002:9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # for giving access to postfix
+    depends_on:
+      postgres:
+        condition: service_healthy
+      fossildb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command:
+      - -Dconfig.file=conf/application.conf
+      - -Djava.net.preferIPv4Stack=true
+      - -Dtracingstore.fossildb.address=fossildb
+      - -Dtracingstore.redis.address=redis
+      - -Ddatastore.redis.address=redis
+      - -Dslick.db.url=jdbc:postgresql://postgres/webknossos
+      - -DwebKnossos.sampleOrganization.enabled=false
+      - -Dtracingstore.publicUri=https://webknossos.tnw.tudelft.nl
+      - -Ddatastore.publicUri=https://webknossos.tnw.tudelft.nl
+      - -Dhttp.uri=https://webknossos.tnw.tudelft.nl
+      - -Dmail.smtp.host=host.docker.internal
+      - -Dmail.smtp.port=25
+      - -Dmail.smtp.tls=false
+      - -Dmail.smtp.auth=false
+      - -Dmail.defaultSender=webKnossos TUDelft <no-reply@webknossos.tnw.tudelft.nl>
+    volumes:
+      - /long_term_storage/webknossos/binaryData:/webknossos/binaryData
+      - "/etc/passwd:/etc/passwd:ro"
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://postgres/webknossos
+      - VIRTUAL_HOST=webknossos.tnw.tudelft.nl
+      - LETSENCRYPT_HOST=webknossos.tnw.tudelft.nl
+    # user 1014 is webknossos
+    user: 1014:1014
+
+  # Postgres
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: webknossos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      #PGPORT: 7432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h 127.0.0.1 -p 5432"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    #ports:
+    #  - "127.0.0.1:5432:5432"
+    volumes:
+      - "./persistent/postgres:/var/lib/postgresql/data/"
+      - "/etc/passwd:/etc/passwd:ro"
+    # user 1014 is webknossos
+    user: 1014:1014
+
+  # FossilDB
+  fossildb:
+    image: scalableminds/fossildb:master__484
+    command:
+      - fossildb
+      - -c
+      - skeletons,skeletonUpdates,volumes,volumeData,volumeUpdates,volumeSegmentIndex,editableMappings,editableMappingUpdates,editableMappingsInfo,editableMappingsAgglomerateToGraph,editableMappingsSegmentToAgglomerate
+    volumes:
+      - "./persistent/fossildb/data:/fossildb/data"
+      - "./persistent/fossildb/backup:/fossildb/backup"
+      - "/etc/passwd:/etc/passwd:ro"
+    # user 1014 is webknossos
+    user: 1014:1014
+
+  # Redis
+  redis:
+    image: redis:7.0.5-alpine
+    command:
+      - redis-server
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      timeout: 1s
+      interval: 5s
+      retries: 10

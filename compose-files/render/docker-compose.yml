@@ -1,0 +1,30 @@
+version: "2.2"
+
+services:
+  db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: render-ws
+      MONGO_INITDB_ROOT_PASSWORD: render-ws
+    volumes:
+      - ./persistent/mongodb:/data/db
+    user:
+      # render-ws
+      1018:1018
+
+  render:
+    build: ./render
+    environment:
+      MONGO_HOST: db
+      MONGO_USERNAME: render-ws
+      MONGO_PASSWORD: render-ws
+      WEB_SERVICE_MAX_TILE_SPECS_TO_RENDER: 100
+    ports:
+      - "8081:8080"
+    volumes:
+      - /long_term_storage:/long_term_storage:ro
+    depends_on:
+      - db
+    #user:
+      # render-ws
+      1018:1018
