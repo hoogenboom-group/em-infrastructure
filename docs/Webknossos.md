@@ -6,7 +6,7 @@ The docker compose file uses the uid:gid 1014 for the webknossos user, create a 
 The docker compose file is configured to use an smtp server running on the host server, the server is used to send email verification links, we have found no real benefit to these as accounts will always have to be manually activated anyway so the options starting with -Dmail could simply be removed.
 
 When running the docker compose file a directory with the database files will be created in the local directory named "persistent".
-Webknossos requires a location to store datasets, this location should have large amounts of storage available, our configuration uses the location `/long_term_storage/webknossos/binaryData`, this location needs to be owned by the webknossos user, in addition we'd like this location to remain owned by the webknossos user so we configure it to inherit group ownership: `chown webknossos:webknossos
+Webknossos requires a location to store datasets, this location should have large amounts of storage available, our configuration uses the location `/long_term_storage/webknossos/binaryData`, this location needs to be owned by the webknossos user, in addition we'd like this location to remain owned by the webknossos user so we configure it to inherit group ownership: `chown webknossos:webknossos`
 
 Follow the guide here on how to set up the instance's first run: https://docs.webknossos.org/webknossos/installation.html
 
