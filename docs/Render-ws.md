@@ -57,4 +57,4 @@ server {
 ```
 
 ### updating
-If any changes in render are made the github repository needs to be updated (eg `git pull`), then the docker compose file can be used to rebuild the image.
+If any changes in render are made the github repository needs to be updated (eg `git pull`), then use --build when running the docker compose file to rebuild the image.
