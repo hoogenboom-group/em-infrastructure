@@ -1,0 +1,3 @@
+[submodule "compose-files/catmaid_publ"]
+	path = compose-files/catmaid_publ
+	url = https://github.com/hoogenboom-group/catmaid-docker
