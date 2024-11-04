@@ -1,3 +1,7 @@
 [submodule "compose-files/catmaid_publ"]
 	path = compose-files/catmaid_publ
 	url = https://github.com/hoogenboom-group/catmaid-docker
+[submodule "compose-files/render/render"]
+	path = compose-files/render/render
+	url = https://github.com/saalfeldlab/render
+	shallow = true

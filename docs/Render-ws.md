@@ -1,11 +1,10 @@
 # Setup for render using docker and nginx
-Render is a project by the saalfeld lab at janelia for rendering microscopy datasets.
+Render is a project by the Saalfeld lab at Janelia for rendering microscopy datasets.
 
 The docker compose file should be installed first, it is configured to build the docker image from the render github repo at `./render`.
+This is a git submodule, make sure the submodule is checked out, `git submodule update --init` can be used to check out the submodule.
 
 The docker compose file uses the uid:gid 1018 for the render-ws user, create a new user to own the data for render-ws on disk: `adduser --uid 1018 --gid 1018 --home-dir / --no-create-home render-ws`
-
-To build, clone the render repo next to the location of the docker compose file: `git clone https://github.com/saalfeldlab/render`, then run the docker compose file.
 
 When running the docker compose file a directory with the database files will be created in the local directory named "persistent".
 
@@ -57,4 +56,4 @@ server {
 ```
 
 ### updating
-If any changes in render are made the github repository needs to be updated (eg `git pull`), then use --build when running the docker compose file to rebuild the image.
+If any changes in render are made the github repository needs to be updated (eg `git pull && git submodule update`), then use --build when running the docker compose file to rebuild the image.
