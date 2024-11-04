@@ -1,12 +1,18 @@
 # Setup for webknosssos using docker and nginx
-The docker compose file should be installed first, make sure to edit the file if your domain is not `https://webknossos.tnw.tudelft.nl`.
+Webknossos is a tool for visualising datasets in a browser.
+It is made by the Max Planck Instutute and the company Scalable Minds.
+
+The docker compose file should be installed first.
+The file contains the domain used by the service, `https://webknossos.tnw.tudelft.nl` in our case, edit the file and replace this url if needed.
 
 The docker compose file uses the uid:gid 1014 for the webknossos user, create a new user to own the data for webknossos on disk: `adduser --uid 1014 --gid 1014 --home-dir / --no-create-home webknossos`
 
-The docker compose file is configured to use an smtp server running on the host server, the server is used to send email verification links, we have found no real benefit to these as accounts will always have to be manually activated anyway so the options starting with -Dmail could simply be removed.
+The docker compose file is configured to use an smtp server running on the host server, the server is used to send email verification links.
+We have found no real benefit to these as accounts will always have to be manually activated anyway so the options starting with -Dmail could simply be removed.
 
 When running the docker compose file a directory with the database files will be created in the local directory named "persistent".
-Webknossos requires a location to store datasets, this location should have large amounts of storage available, our configuration uses the location `/long_term_storage/webknossos/binaryData`, this location needs to be owned by the webknossos user, in addition we'd like this location to remain owned by the webknossos user so we configure it to inherit group ownership: `chown webknossos:webknossos . -R && chmod g+s . -R # this sets the setgid bit` 
+Webknossos requires a location to store datasets, this location should have large amounts of storage available, our configuration uses the location `/long_term_storage/webknossos/binaryData`, edit the file and replace this directory if needed.
+This location needs to be owned by the webknossos user, in addition this location to should remain owned by the webknossos user so it is configured to inherit group ownership: `chown webknossos:webknossos . && chmod g+s . # this sets the setgid bit`
 
 Follow the guide here on how to set up the instance's first run: https://docs.webknossos.org/webknossos/installation.html
 
@@ -34,7 +40,8 @@ server {
 ```
 
 ### updating
-The webknossos version is pinned in the docker compose file, when this is changed it might be needed to run a database migration, check webknossos's changelog for this, a script is added to run migrations on the running postgres instance: `postgres_evolution.sh`
+The webknossos version is pinned in the docker compose file, when this is changed it might be needed to run a database migration, check webknossos's changelog for this.
+A script is added to run migrations on the running postgres instance: `postgres_evolution.sh`
 
 ### scripts
 Some other useful scripts are provided for managing the webknossos database, some of these features have been added already to the web interface however.

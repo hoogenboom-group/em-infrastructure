@@ -2,6 +2,7 @@
 This documentation details our lab's digital infrastructure for electron microscopy, we have multiple services running on our server:
 - render ws https://github.com/saalfeldlab/render
 - Webknossos https://github.com/scalableminds/webknossos/
+- CATMAID https://github.com/catmaid/CATMAID/
 - Delmic's proprietary data processing service for the FAST-EM
 - nginx reverse proxy
 - postfix mail server
@@ -19,8 +20,9 @@ Supporting software like nginx is installed through apt from Ubuntu's software r
 Our choices for these could be changed for alternatives if needed.
 
 Here are more detailed guides for the services running in docker containers:
-- [Webknossos](./Webknossos.md)
 - [Render](./Render-ws.md)
+- [Webknossos](./Webknossos.md)
+- [CATMAID](./catmaid.md)
 
 Basic installation overview:
 1. install docker compose and nginx
