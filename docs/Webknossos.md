@@ -32,7 +32,7 @@ server {
     proxy_http_version 1.1; # very important
 
     location / {
-        proxy_pass http://127.0.0.1:9002/; # 9002 is the port used in the docker-compose.yml
+        proxy_pass http://127.0.0.1:9022/; # 9022 is the port used in the docker-compose.yml
     }
 
     # letsencrypt ssl stuff is added by certbot

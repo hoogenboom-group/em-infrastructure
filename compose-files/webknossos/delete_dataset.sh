@@ -27,7 +27,14 @@ fi
 amount=$(exec_psql "\\t on" \
     "select _id from webknossos.annotations where _dataset = '$id'" \
   | wc -l)
-echo "$id has $(( amount - 1 )) annotations"
+if [[ $amount == 1 ]]; then
+  echo "$id has no annotations"
+else
+  echo "$id has $(( amount - 1 )) annotations by the following users:"
+  exec_psql "select _user, email, firstname, lastname from webknossos.userinfos where _user in (
+          select _user from webknossos.annotations where _dataset = '$id'
+  )"
+fi
 echo "are you sure you want to delete this? (^C exits)"
 read -r
 

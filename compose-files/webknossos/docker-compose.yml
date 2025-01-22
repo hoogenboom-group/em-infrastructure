@@ -2,9 +2,9 @@ version: "2.2"
 
 services:
   webknossos:
-    image: scalableminds/webknossos:24.04.0
+    image: scalableminds/webknossos:24.12.0
     ports:
-      - "127.0.0.1:9002:9000"
+      - "127.0.0.1:9022:9000"
     extra_hosts:
       - "host.docker.internal:host-gateway" # for giving access to postfix
     depends_on:
@@ -30,6 +30,7 @@ services:
       - -Dmail.smtp.tls=false
       - -Dmail.smtp.auth=false
       - -Dmail.defaultSender=webKnossos TUDelft <no-reply@webknossos.tnw.tudelft.nl>
+      - -Dfeatures.recommendWkorgInstance=false
     volumes:
       - /long_term_storage/webknossos/binaryData:/webknossos/binaryData
       - "/etc/passwd:/etc/passwd:ro"
@@ -42,7 +43,7 @@ services:
 
   # Postgres
   postgres:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_DB: webknossos
       POSTGRES_USER: postgres
@@ -57,6 +58,7 @@ services:
     #  - "127.0.0.1:5432:5432"
     volumes:
       - "./persistent/postgres:/var/lib/postgresql/data/"
+      - "./persistent/pg_dumps:/pg_dumps/"
       - "/etc/passwd:/etc/passwd:ro"
     # user 1014 is webknossos
     user: 1014:1014
@@ -77,7 +79,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.0.5-alpine
+    image: redis:7-alpine
     command:
       - redis-server
     healthcheck:
